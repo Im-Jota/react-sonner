@@ -1,34 +1,36 @@
 import { styled } from "styled-components";
 import { BiTrash } from "react-icons/bi";
 
-export default function Tasks () {
+export default function Tasks ({rowTasks, handlerchangedone}) {
   return (
     <Container>
       <Task>
-        <Ul>
-          <li>lavar</li>
-          <li><BiTrash /></li>
-        </Ul>
-        <Ul>
-          <li>lavar</li>
-          <li><BiTrash style={{color: '#fa4119', cursor: 'pointer'}}/></li>
-        </Ul><Ul>
-          <li>lavar</li>
-          <li><BiTrash /></li>
-        </Ul><Ul>
-          <li>lavar</li>
-          <li><BiTrash /></li>
-        </Ul><Ul>
-          <li>lavar</li>
-          <li><BiTrash /></li>
-        </Ul><Ul>
-          <li>lavar</li>
-          <li><BiTrash /></li>
-        </Ul>
+        {rowTasks.map((doc) => {
+          return (<Ul key={doc.id}>
+            <Li $hope={doc.done.toString()}>
+              <input
+                checked={doc.done}
+                value={doc.done}
+                type="checkbox"
+                onChange={() => handlerchangedone(doc.id)}
+              />
+              {doc.name}
+            </Li>
+            <li><BiTrash style={{color: '#fa4119', cursor: 'pointer'}}/></li>
+          </Ul>)
+        })} 
       </Task>
     </Container>
   );
 } 
+
+const Li = styled.li`
+    display: flex;
+    gap: 1rem;
+
+    text-decoration: ${props => props.$hope === 'true' && 'line-through'};
+    color: ${props => props.$hope === 'true' && 'gray'}
+`;
 
 const Ul = styled.ul`
   list-style: none;
@@ -47,11 +49,16 @@ const Ul = styled.ul`
       border-radius: 0 0 1rem 1rem;
     }
 
+    li {
+      color: white;
+    }
+  
   }
 
   &:last-child {
     border-bottom: 0;
-  }
+  } 
+
 `;
 
 const Task = styled.div`

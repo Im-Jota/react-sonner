@@ -1,21 +1,69 @@
 import { styled } from "styled-components"
 import { Header, Portada } from "./elements/Header"
 import Tasks from "./components/Tasks";
+import { useEffect, useState } from "react";
+import {v4} from 'uuid'
+import { Toaster, toast } from "sonner";
+import { BiCheck, BiError } from 'react-icons/bi'
 
 function App() {
+  const id = v4();
+  
+  const [task, setTask] = useState('');
+  const [rowTasks, setRowsTasks] = useState([]);
+
+  useEffect(() => {
+    const row = localStorage.getItem('Task');
+    if(row.length > 0){
+      setRowsTasks(JSON.parse(row));
+    }
+  }, [])
+
+  const handlerNewTask = (e) => {
+    e.preventDefault();
+    const ve = rowTasks.find((f) => f.name === task);
+    if(!ve){
+      const row = [...rowTasks];
+      setRowsTasks([...row, {id: id, name: task, done: false}]);
+      toast('Task added successfully', {
+        icon: <BiCheck />
+      });
+    } else {
+      toast('Duplicate task', {
+        icon: <BiError />
+      })
+    } 
+    
+    setTask('');
+  }
+  
+  const handlerchangedone = (id) => {
+    const row = rowTasks.map((doc) => doc.id === id ? {...doc, done: !doc.done} : doc);
+    setRowsTasks(row);
+    toast('Task Done', {
+      icon: <BiCheck />
+    });
+  }
+
+  useEffect(()=>{
+    localStorage.setItem('Task', JSON.stringify(rowTasks));
+  },[rowTasks])
 
   return (
     <Container>   
       <Header>
         <Portada></Portada>
       </Header>
-      <Form>
+      <Form onSubmit={handlerNewTask}>
         <input
           placeholder="Enter Task"
+          value={task}
+          onChange={(e) => setTask(e.target.value)}
         />
         <button>Save</button>
       </Form>
-      <Tasks />
+      <Tasks rowTasks={rowTasks} handlerchangedone={handlerchangedone} />
+      <Toaster />
     </Container>
   )
 }
@@ -34,7 +82,7 @@ const Form = styled.form`
     width: calc(100% - 4rem);
     border: none;
     padding: 1rem 2rem;
-    box-shadow: .1rem .1rem 1rem gray;
+    box-shadow: .1rem .1rem 1rem black;
 
     &:focus{
       outline: none;
@@ -48,6 +96,7 @@ const Form = styled.form`
     cursor: pointer;
     background: #17a2b8;
     color: white;
+    box-shadow: .1rem .1rem 1rem black;
   }
 `;
 
