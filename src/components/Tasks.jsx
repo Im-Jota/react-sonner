@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 import { BiTrash } from "react-icons/bi";
 
-export default function Tasks ({rowTasks, handlerchangedone}) {
+export default function Tasks ({rowTasks, handlerchangedone, handlerDelete}) {
   return (
     <Container>
       <Task>
@@ -16,7 +16,7 @@ export default function Tasks ({rowTasks, handlerchangedone}) {
               />
               {doc.name}
             </Li>
-            <li><BiTrash style={{color: '#fa4119', cursor: 'pointer'}}/></li>
+            <li><BiTrash style={{color: '#fa4119', cursor: 'pointer'}} onClick={() => handlerDelete(doc.id)}/></li>
           </Ul>)
         })} 
       </Task>
@@ -40,13 +40,13 @@ const Ul = styled.ul`
   justify-content: space-between;
   &:hover {
     background: gray;
-  
-    &:first-child {
-      border-radius: 1rem 1rem 0 0;
-    }
 
     &:last-child {
       border-radius: 0 0 1rem 1rem;
+    }
+
+    &:first-child {
+      border-radius: 1rem 1rem 0 0;
     }
 
     li {

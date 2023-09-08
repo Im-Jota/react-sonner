@@ -14,7 +14,7 @@ function App() {
 
   useEffect(() => {
     const row = localStorage.getItem('Task');
-    if(row.length > 0){
+    if(row !== null){
       setRowsTasks(JSON.parse(row));
     }
   }, [])
@@ -45,6 +45,17 @@ function App() {
     });
   }
 
+  const handlerDelete = (id) => {
+    const newRow = [...rowTasks]
+    rowTasks.forEach((row, idx) => {
+      if(row.id === id){
+        newRow.splice(idx, 1);
+      }
+    })
+    setRowsTasks(newRow);
+    toast.success('Task Deleted')
+  }
+
   useEffect(()=>{
     localStorage.setItem('Task', JSON.stringify(rowTasks));
   },[rowTasks])
@@ -62,7 +73,7 @@ function App() {
         />
         <button>Save</button>
       </Form>
-      <Tasks rowTasks={rowTasks} handlerchangedone={handlerchangedone} />
+      <Tasks rowTasks={rowTasks} handlerchangedone={handlerchangedone} handlerDelete={handlerDelete} />
       <Toaster />
     </Container>
   )
