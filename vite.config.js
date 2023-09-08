@@ -4,5 +4,5 @@ import react from '@vitejs/plugin-react-swc'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: 'https://Im-Jota.github.io/Tasks-Sonner/'
+  base: 'https://Im-Jota.github.io/react-sonner/'
 })
